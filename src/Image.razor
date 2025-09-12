@@ -1,0 +1,236 @@
+@using Microsoft.AspNetCore.Components.Web
+@using Soenneker.Extensions.String
+@inherits Soenneker.Quark.Components.Element
+
+<img @attributes="BuildAttributes()" />
+
+@code {
+    /// <summary>
+    /// The absolute or relative URL of the image.
+    /// </summary>
+    [Parameter]
+    public string? Source { get; set; }
+
+    /// <summary>
+    /// Alternate text for an image.
+    /// </summary>
+    [Parameter]
+    public string? Alt { get; set; }
+
+    /// <summary>
+    /// Forces an image to take up the whole width.
+    /// </summary>
+    [Parameter]
+    public bool Fluid { get; set; }
+
+    /// <summary>
+    /// Defers loading the image until it reaches a calculated distance from the viewport.
+    /// </summary>
+    [Parameter]
+    public bool Lazy { get; set; }
+
+    /// <summary>
+    /// The width of the image.
+    /// </summary>
+    [Parameter]
+    public string? Width { get; set; }
+
+    /// <summary>
+    /// The height of the image.
+    /// </summary>
+    [Parameter]
+    public string? Height { get; set; }
+
+    /// <summary>
+    /// The loading attribute for the image.
+    /// </summary>
+    [Parameter]
+    public string? Loading { get; set; }
+
+    /// <summary>
+    /// The decoding attribute for the image.
+    /// </summary>
+    [Parameter]
+    public string? Decoding { get; set; }
+
+    /// <summary>
+    /// The fetchpriority attribute for the image.
+    /// </summary>
+    [Parameter]
+    public string? FetchPriority { get; set; }
+
+    /// <summary>
+    /// The sizes attribute for the image.
+    /// </summary>
+    [Parameter]
+    public string? Sizes { get; set; }
+
+    /// <summary>
+    /// The srcset attribute for the image.
+    /// </summary>
+    [Parameter]
+    public string? SrcSet { get; set; }
+
+    /// <summary>
+    /// The crossorigin attribute for the image.
+    /// </summary>
+    [Parameter]
+    public string? CrossOrigin { get; set; }
+
+    /// <summary>
+    /// The referrerpolicy attribute for the image.
+    /// </summary>
+    [Parameter]
+    public string? ReferrerPolicy { get; set; }
+
+    /// <summary>
+    /// The usemap attribute for the image.
+    /// </summary>
+    [Parameter]
+    public string? UseMap { get; set; }
+
+    /// <summary>
+    /// The ismap attribute for the image.
+    /// </summary>
+    [Parameter]
+    public bool IsMap { get; set; }
+
+    /// <summary>
+    /// The longdesc attribute for the image.
+    /// </summary>
+    [Parameter]
+    public string? LongDesc { get; set; }
+
+    /// <summary>
+    /// Event callback for when the image loads.
+    /// </summary>
+    [Parameter]
+    public EventCallback<ProgressEventArgs> OnLoad { get; set; }
+
+    /// <summary>
+    /// Event callback for when the image fails to load.
+    /// </summary>
+    [Parameter]
+    public EventCallback<ErrorEventArgs> OnError { get; set; }
+
+    /// <summary>
+    /// Event callback for when the image starts loading.
+    /// </summary>
+    [Parameter]
+    public EventCallback<ProgressEventArgs> OnLoadStart { get; set; }
+
+    /// <summary>
+    /// Event callback for when the image loading is aborted.
+    /// </summary>
+    [Parameter]
+    public EventCallback<ProgressEventArgs> OnAbort { get; set; }
+
+    private string? GetLoadingAttribute()
+    {
+        if (Lazy)
+            return "lazy";
+        
+        return Loading;
+    }
+
+    private string? GetFluidClass()
+    {
+        if (Fluid)
+            return "img-fluid";
+        
+        return null;
+    }
+
+    protected override Dictionary<string, object> BuildAttributes()
+    {
+        Dictionary<string, object> attributes = base.BuildAttributes();
+
+        // Add default Bootstrap image classes if no class is specified
+        if (!Class.HasContent())
+        {
+            var baseClasses = "img-thumbnail";
+            string? fluidClass = GetFluidClass();
+
+            if (fluidClass != null)
+            {
+                baseClasses = $"{baseClasses} {fluidClass}";
+            }
+
+            attributes["class"] = AppendToClass(attributes.GetValueOrDefault("class")
+                ?.ToString(), baseClasses);
+        }
+        else
+        {
+            // If class is specified, still add fluid class if not already present
+            string currentClass = attributes.GetValueOrDefault("class")
+                ?.ToString() ?? "";
+
+            string? fluidClass = GetFluidClass();
+            if (fluidClass != null && !currentClass.Contains(fluidClass))
+            {
+                currentClass = AppendToClass(currentClass, fluidClass);
+            }
+
+            attributes["class"] = currentClass;
+        }
+
+        // Add image-specific attributes
+        if (Source.HasContent())
+            attributes["src"] = Source;
+
+        if (Alt.HasContent())
+            attributes["alt"] = Alt;
+
+        if (Width.HasContent())
+            attributes["width"] = Width;
+
+        if (Height.HasContent())
+            attributes["height"] = Height;
+
+        string? loadingAttr = GetLoadingAttribute();
+        if (loadingAttr.HasContent())
+            attributes["loading"] = loadingAttr;
+
+        if (Decoding.HasContent())
+            attributes["decoding"] = Decoding;
+
+        if (FetchPriority.HasContent())
+            attributes["fetchpriority"] = FetchPriority;
+
+        if (Sizes.HasContent())
+            attributes["sizes"] = Sizes;
+
+        if (SrcSet.HasContent())
+            attributes["srcset"] = SrcSet;
+
+        if (CrossOrigin.HasContent())
+            attributes["crossorigin"] = CrossOrigin;
+
+        if (ReferrerPolicy.HasContent())
+            attributes["referrerpolicy"] = ReferrerPolicy;
+
+        if (UseMap.HasContent())
+            attributes["usemap"] = UseMap;
+
+        if (IsMap)
+            attributes["ismap"] = true;
+
+        if (LongDesc.HasContent())
+            attributes["longdesc"] = LongDesc;
+
+        // Add event handlers
+        if (OnLoad.HasDelegate)
+            attributes["onload"] = EventCallback.Factory.Create(this, OnLoad);
+
+        if (OnError.HasDelegate)
+            attributes["onerror"] = EventCallback.Factory.Create(this, OnError);
+
+        if (OnLoadStart.HasDelegate)
+            attributes["onloadstart"] = EventCallback.Factory.Create(this, OnLoadStart);
+
+        if (OnAbort.HasDelegate)
+            attributes["onabort"] = EventCallback.Factory.Create(this, OnAbort);
+
+        return attributes;
+    }
+}
