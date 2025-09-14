@@ -43,6 +43,6 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.9" />
         <PackageReference Include="Soenneker.Extensions.String" Version="3.0.556" />
-        <PackageReference Include="Soenneker.Quark.Components" Version="3.0.6" />
+        <PackageReference Include="Soenneker.Quark.Components" Version="3.0.7" />
     </ItemGroup>
 </Project>
