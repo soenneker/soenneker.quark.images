@@ -156,8 +156,7 @@
                 baseClasses = $"{baseClasses} {fluidClass}";
             }
 
-            attributes["class"] = AppendToClass(attributes.GetValueOrDefault("class")
-                ?.ToString(), baseClasses);
+            AppendToClassAttr(attributes, baseClasses);
         }
         else
         {
@@ -168,10 +167,9 @@
             string? fluidClass = GetFluidClass();
             if (fluidClass != null && !currentClass.Contains(fluidClass))
             {
-                currentClass = AppendToClass(currentClass, fluidClass);
+                AppendToClassAttr(attributes, fluidClass);
             }
 
-            attributes["class"] = currentClass;
         }
 
         // Add image-specific attributes
