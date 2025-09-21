@@ -30,18 +30,6 @@
     public bool Lazy { get; set; }
 
     /// <summary>
-    /// The width of the image.
-    /// </summary>
-    [Parameter]
-    public string? Width { get; set; }
-
-    /// <summary>
-    /// The height of the image.
-    /// </summary>
-    [Parameter]
-    public string? Height { get; set; }
-
-    /// <summary>
     /// The loading attribute for the image.
     /// </summary>
     [Parameter]
@@ -178,12 +166,6 @@
 
         if (Alt.HasContent())
             Attributes["alt"] = Alt;
-
-        if (Width.HasContent())
-            Attributes["width"] = Width;
-
-        if (Height.HasContent())
-            Attributes["height"] = Height;
 
         string? loadingAttr = GetLoadingAttribute();
         if (loadingAttr.HasContent())
