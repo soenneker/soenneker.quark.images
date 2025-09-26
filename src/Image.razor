@@ -5,6 +5,8 @@
 <img @attributes="BuildAttributes()" />
 
 @code {
+	public override string? Name { get; set; } = "Image";
+
     /// <summary>
     /// The absolute or relative URL of the image.
     /// </summary>
@@ -131,7 +133,7 @@
 
     protected override Dictionary<string, object> BuildAttributes()
     {
-        base.BuildAttributes();
+        Attributes = base.BuildAttributes();
 
         // Add default Bootstrap image classes if no class is specified
         if (!Class.HasContent())
